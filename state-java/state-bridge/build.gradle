@@ -1,0 +1,10 @@
+dependencies {
+    implementation project(':state-core')
+    implementation 'net.sf.py4j:py4j:0.10.9.7'
+    implementation 'org.slf4j:slf4j-simple:1.7.36'
+}
+
+task runBridge(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'com.flink.state.bridge.BridgeEntryPoint'
+}
