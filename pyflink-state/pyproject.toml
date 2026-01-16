@@ -5,12 +5,12 @@ description = "Python state processor for Flink"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "py4j",
+    "py4j>=0.10.9.9",
 ]
 
 [dependency-groups]
 dev = [
-    "pytest",
-    "ruff",
-    "ty",
+    "pytest>=9.0.2",
+    "ruff>=0.14.13",
+    "ty>=0.0.12",
 ]

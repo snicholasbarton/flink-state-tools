@@ -63,13 +63,13 @@ dev = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "py4j" }]
+requires-dist = [{ name = "py4j", specifier = ">=0.10.9.9" }]
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "pytest" },
-    { name = "ruff" },
-    { name = "ty" },
+    { name = "pytest", specifier = ">=9.0.2" },
+    { name = "ruff", specifier = ">=0.14.13" },
+    { name = "ty", specifier = ">=0.0.12" },
 ]
 
 [[package]]
