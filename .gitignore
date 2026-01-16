@@ -1,0 +1,24 @@
+# Gradle
+.gradle/
+build/
+*.jar
+!gradle/wrapper/gradle-wrapper.jar
+
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.venv/
+dist/
+build/
+*.egg-info/
+
+# IDEA
+.idea/
+*.iml
+
+# VS Code
+.vscode/
+
+# Project Specific
+verify_connection.py
