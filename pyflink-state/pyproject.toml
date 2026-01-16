@@ -1,0 +1,16 @@
+[project]
+name = "pyflink-state"
+version = "0.1.0"
+description = "Python state processor for Flink"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "py4j>=0.10.9.9",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.2",
+    "ruff>=0.14.13",
+    "ty>=0.0.12",
+]
