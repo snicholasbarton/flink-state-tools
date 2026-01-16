@@ -2,7 +2,7 @@
 .gradle/
 build/
 *.jar
-!gradle/wrapper/gradle-wrapper.jar
+!state-java/gradle/wrapper/gradle-wrapper.jar
 
 # Python
 __pycache__/
