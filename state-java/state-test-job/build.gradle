@@ -1,0 +1,26 @@
+dependencies {
+    implementation 'org.apache.flink:flink-clients:1.19.0'
+    implementation 'org.apache.flink:flink-java:1.19.0'
+    implementation 'org.apache.flink:flink-streaming-java:1.19.0'
+    implementation 'org.apache.flink:flink-runtime:1.19.0'
+    implementation 'org.apache.flink:flink-statebackend-rocksdb:1.19.0'
+
+    // Logging
+    implementation 'org.apache.logging.log4j:log4j-slf4j-impl:2.17.1'
+    implementation 'org.apache.logging.log4j:log4j-api:2.17.1'
+    implementation 'org.apache.logging.log4j:log4j-core:2.17.1'
+
+    // Test utils for MiniCluster
+    implementation 'org.apache.flink:flink-test-utils:1.19.0'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+task runSavepointGenerator(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'com.flink.state.testjob.SavepointGenerator'
+}

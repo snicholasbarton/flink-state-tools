@@ -1,3 +1,4 @@
 rootProject.name = 'flink-state-analyzer'
 include 'state-core'
 include 'state-bridge'
+include 'state-test-job'
