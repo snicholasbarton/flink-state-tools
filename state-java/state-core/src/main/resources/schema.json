@@ -1,0 +1,117 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Flink State Topology and Statistics",
+  "type": "object",
+  "properties": {
+    "jobId": {
+      "type": "string",
+      "description": "The unique identifier of the Flink job."
+    },
+    "operators": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "uid": {
+            "type": "string",
+            "description": "The unique UID of the operator (hash)."
+          },
+          "name": {
+            "type": "string",
+            "description": "The human-readable name of the operator."
+          },
+          "parallelism": {
+            "type": "integer",
+            "description": "The configured parallelism of the operator."
+          },
+          "maxParallelism": {
+            "type": "integer",
+            "description": "The maximum parallelism."
+          },
+          "backendType": {
+            "type": "string",
+            "description": "The state backend type (e.g., HashMap, RocksDB)."
+          },
+          "chaining": {
+            "type": "object",
+            "properties": {
+              "taskName": {
+                "type": "string",
+                "description": "The name of the task this operator belongs to."
+              },
+              "headOperatorUid": {
+                "type": "string",
+                "description": "The UID of the head operator in the chain."
+              }
+            }
+          },
+          "subtasks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "index": {
+                  "type": "integer",
+                  "description": "The subtask index (0 to parallelism-1)."
+                },
+                "stateSize": {
+                  "type": "integer",
+                  "description": "The total state size for this subtask in bytes."
+                },
+                "host": {
+                  "type": "string",
+                  "description": "The host where this subtask is running (optional)."
+                }
+              },
+              "required": ["index", "stateSize"]
+            }
+          },
+          "stateDetails": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "The name of the state (e.g., 'window-contents')."
+                },
+                "type": {
+                  "type": "string",
+                  "description": "The type of state (e.g., ValueState, MapState)."
+                },
+                "size": {
+                  "type": "integer",
+                  "description": "The size of this specific state in bytes."
+                }
+              },
+              "required": ["name", "type"]
+            }
+          }
+        },
+        "required": ["uid", "name", "parallelism"]
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string",
+            "description": "UID of the source operator."
+          },
+          "target": {
+            "type": "string",
+            "description": "UID of the target operator."
+          },
+          "shipStrategy": {
+            "type": "string",
+            "description": "The data shipping strategy (e.g., HASH, FORWARD)."
+          }
+        },
+        "required": ["source", "target"]
+      }
+    }
+  },
+  "required": ["operators"]
+}

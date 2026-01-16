@@ -1,12 +1,14 @@
 package com.flink.state.core;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.flink.state.core.model.Operator;
+import com.flink.state.core.model.OperatorEdge;
+import com.flink.state.core.model.Topology;
 import com.flink.state.core.source.LocalFileSource;
 import com.flink.state.core.source.SavepointSource;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.state.api.SavepointReader;
+import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
 public class StateAnalyzer {
 
@@ -25,31 +27,41 @@ public class StateAnalyzer {
     }
 
     public String getTopologyJson() {
-        ObjectNode root = mapper.createObjectNode();
-        ArrayNode operators = root.putArray("operators");
+        Topology topology = new Topology();
 
-        ObjectNode op1 = operators.addObject();
-        op1.put("uid", "hash_123");
-        op1.put("name", "Source: Kafka");
-        op1.put("parallelism", 4);
+        // Placeholder data logic - to be replaced with actual extraction logic
+        Operator op1 = new Operator();
+        op1.setUid("hash_123");
+        op1.setName("Source: Kafka");
+        op1.setParallelism(4);
 
-        ObjectNode op2 = operators.addObject();
-        op2.put("uid", "hash_456");
-        op2.put("name", "Window Aggregation");
-        op2.put("parallelism", 4);
+        Operator op2 = new Operator();
+        op2.setUid("hash_456");
+        op2.setName("Window Aggregation");
+        op2.setParallelism(4);
 
-        ArrayNode edges = root.putArray("edges");
-        ObjectNode edge = edges.addObject();
-        edge.put("source", "hash_123");
-        edge.put("target", "hash_456");
+        topology.getOperators().add(op1);
+        topology.getOperators().add(op2);
 
-        return root.toString();
+        topology.getEdges().add(new OperatorEdge("hash_123", "hash_456"));
+
+        try {
+            return mapper.writeValueAsString(topology);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Failed to serialize topology", e);
+        }
     }
 
     public String getSkewMetrics(String operatorUid) {
-        ObjectNode metrics = mapper.createObjectNode();
-        metrics.put("operatorUid", operatorUid);
-        metrics.put("skew", 0.05);
-        return metrics.toString();
+        // In the future, this should probably retrieve the Operator object and return its metrics or subtask stats
+        try {
+            // Returning a JSON string as before, but potentially this could be a serialized Metrics object
+            return mapper.createObjectNode()
+                .put("operatorUid", operatorUid)
+                .put("skew", 0.05)
+                .toString();
+        } catch (Exception e) {
+             throw new RuntimeException(e);
+        }
     }
 }
