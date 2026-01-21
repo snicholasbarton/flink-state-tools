@@ -1,9 +1,11 @@
 dependencies {
-    implementation 'org.apache.flink:flink-clients:1.19.0'
-    implementation 'org.apache.flink:flink-java:1.19.0'
-    implementation 'org.apache.flink:flink-streaming-java:1.19.0'
-    implementation 'org.apache.flink:flink-runtime:1.19.0'
-    implementation 'org.apache.flink:flink-statebackend-rocksdb:1.19.0'
+    implementation 'org.apache.flink:flink-clients:2.0.0'
+    implementation 'org.apache.flink:flink-datastream:2.0.0'
+    implementation 'org.apache.flink:flink-streaming-java:2.0.0'
+    implementation 'org.apache.flink:flink-runtime:2.0.0'
+    implementation 'org.apache.flink:flink-statebackend-rocksdb:2.0.0'
+    implementation 'org.apache.flink:flink-connector-datagen:2.0.0'
+    implementation 'org.apache.flink:flink-connector-base:2.0.0'
 
     // Logging
     implementation 'org.apache.logging.log4j:log4j-slf4j-impl:2.17.1'
@@ -11,7 +13,7 @@ dependencies {
     implementation 'org.apache.logging.log4j:log4j-core:2.17.1'
 
     // Test utils for MiniCluster
-    implementation 'org.apache.flink:flink-test-utils:1.19.0'
+    implementation 'org.apache.flink:flink-test-utils:2.0.0'
 
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
 }
