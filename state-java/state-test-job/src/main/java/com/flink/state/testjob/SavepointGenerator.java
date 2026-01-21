@@ -4,13 +4,19 @@ import org.apache.flink.configuration.Configuration;
 import org.apache.flink.configuration.RestOptions;
 import org.apache.flink.runtime.jobgraph.JobGraph;
 import org.apache.flink.core.execution.SavepointFormatType;
-import org.apache.flink.runtime.jobgraph.SavepointRestoreSettings;
 import org.apache.flink.runtime.minicluster.MiniCluster;
 import org.apache.flink.runtime.minicluster.MiniClusterConfiguration;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
-import org.apache.flink.streaming.api.functions.sink.DiscardingSink;
+import org.apache.flink.api.connector.source.Source;
+import org.apache.flink.connector.datagen.source.DataGeneratorSource;
+import org.apache.flink.connector.datagen.source.GeneratorFunction;
+import org.apache.flink.api.common.eventtime.WatermarkStrategy;
+import org.apache.flink.streaming.api.functions.sink.v2.DiscardingSink;
+import org.apache.flink.api.connector.source.util.ratelimit.RateLimiterStrategy;
+import org.apache.flink.api.common.typeinfo.Types;
 
 import java.io.File;
+import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 
 public class SavepointGenerator {
@@ -32,12 +38,19 @@ public class SavepointGenerator {
             env.setParallelism(2);
             env.enableCheckpointing(1000); // Enable checkpointing to ensure state backends are active
 
-            env.addSource(new TransactionSource())
+            DataGeneratorSource<Transaction> source = new DataGeneratorSource<>(
+                    new TransactionGenerator(),
+                    Long.MAX_VALUE,
+                    RateLimiterStrategy.noOp(),
+                    Types.POJO(Transaction.class)
+            );
+
+            env.fromSource(source, WatermarkStrategy.<Transaction>noWatermarks(), "Transaction Source")
                     .uid("source-id")
                     .keyBy(Transaction::getAccountId)
                     .process(new StatefulProcessor())
                     .uid("process-id")
-                    .addSink(new DiscardingSink<>())
+                    .sinkTo(new DiscardingSink<>())
                     .uid("sink-id");
 
             JobGraph jobGraph = env.getStreamGraph().getJobGraph();
@@ -70,6 +83,22 @@ public class SavepointGenerator {
             } catch (Exception e) {
                 // Job cancellation expected
             }
+        }
+    }
+
+    private static class TransactionGenerator implements GeneratorFunction<Long, Transaction> {
+        private final Random javaRandom = new Random();
+
+        @Override
+        public Transaction map(Long value) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+            String accountId = "account-" + (javaRandom.nextInt(10));
+            double amount = javaRandom.nextDouble() * 100.0;
+            return new Transaction(accountId, System.currentTimeMillis(), amount);
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.flink.state.testjob;
 
+import org.apache.flink.api.common.functions.OpenContext;
 import org.apache.flink.api.common.state.*;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.KeyedProcessFunction;
@@ -21,7 +22,7 @@ public class StatefulProcessor extends KeyedProcessFunction<String, Transaction,
     private long totalProcessedCount = 0;
 
     @Override
-    public void open(Configuration parameters) throws Exception {
+    public void open(OpenContext openContext) throws Exception {
         // Initialize Keyed State
         ValueStateDescriptor<Double> totalAmountDesc = new ValueStateDescriptor<>("total-amount", Double.class);
         totalAmountState = getRuntimeContext().getState(totalAmountDesc);
